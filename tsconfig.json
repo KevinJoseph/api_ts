@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "esModuleInterop": true, // permite varios module requires import amd
+    "resolveJsonModule": true, //para importar archivos json
+    "target": "ES2020",
+    "noImplicitAny": true, //no permite any por default
+    "moduleResolution": "Node",
+    "sourceMap": false, //depuracion más detalle
+    "baseUrl": "./", //carpeta raiz de proyecto
+    "outDir": "./cache", // carpeta donde se va transpilar
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  },
+  "exclude": ["node_modules","cache"],
+  "include": ["src/**/*.ts"]
+}
