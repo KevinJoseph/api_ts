@@ -6,8 +6,9 @@ import { UserEntity } from "./entities/user.entity";
 import { UserModelDto } from "./dtos/user-models.dto";
 import { Result, err, ok } from "neverthrow";
 import { UserInsertException } from "./exceptions/user.exception";
+import { UserInsertResultApp } from "../application/results/user-insert.result";
 
-export type UserInsertResult = Result<UserEntity, UserInsertException>
+export type UserInsertResult = Result<UserInsertResultApp, UserInsertException>
 
 export class UserInfrastructure implements UserRepository{
     async insert(user: User): Promise<UserInsertResult> {
@@ -15,7 +16,7 @@ export class UserInfrastructure implements UserRepository{
             const repository = DatabaseBootstrap.dataSource.getRepository(UserEntity)
             const userEntity = UserModelDto.fromDomainToData(user);
             const userInserted = await repository.save(userEntity)
-            return ok(userInserted)
+            return ok(UserModelDto.fromDataToApplication(userInserted))
         } catch (error) {
             return err(new UserInsertException(error.message))
         }

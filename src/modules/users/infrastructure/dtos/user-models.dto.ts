@@ -1,6 +1,7 @@
-import { plainToClass, plainToInstance } from "class-transformer";
+import { instanceToPlain, plainToClass, plainToInstance } from "class-transformer";
 import { User, UserProperties } from "../../domain/user";
 import { UserEntity } from "../entities/user.entity";
+import { UserInsertResultApp } from "../../application/results/user-insert.result";
 
 export class UserModelDto{
     static fromDomainToData(user: User): UserEntity{
@@ -19,5 +20,14 @@ export class UserModelDto{
         userEntity.deletedAt = userProperties.deletedAt;
 
         return userEntity;    
+    }
+
+    static fromDataToApplication(userEntity: UserEntity): UserInsertResultApp{
+       return {
+        id: userEntity.id,
+        name: userEntity.name,
+        lastname: userEntity.lastname,
+        email: userEntity.email
+       }
     }
 }
