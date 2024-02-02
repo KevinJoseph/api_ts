@@ -7,8 +7,10 @@ import { UserModelDto } from "./dtos/user-models.dto";
 import { Result, err, ok } from "neverthrow";
 import { UserInsertException } from "./exceptions/user.exception";
 
+export type UserInsertResult = Result<UserEntity, UserInsertException>
+
 export class UserInfrastructure implements UserRepository{
-    async insert(user: User): Promise<Result<UserEntity, UserInsertException>> {
+    async insert(user: User): Promise<UserInsertResult> {
         try {
             const repository = DatabaseBootstrap.dataSource.getRepository(UserEntity)
             const userEntity = UserModelDto.fromDomainToData(user);
