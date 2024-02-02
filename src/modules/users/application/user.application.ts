@@ -21,7 +21,7 @@ export class UserApplication {
     async insert(user: User): Promise<UserInsertResultApplication>{
         const userResult = await this.repository.insert(user)
         if(userResult.isErr()){
-            return err(new Error(userResult.error.message))
+            return err(userResult.error)
         }
 
         return ok(UserInsertDto.fromResponseToPresentation(userResult.value));
