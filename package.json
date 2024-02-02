@@ -22,6 +22,7 @@
     "class-transformer": "^0.5.1",
     "express": "^4.18.2",
     "mysql2": "^3.9.1",
+    "neverthrow": "^6.1.0",
     "typeorm": "^0.3.20",
     "uuid": "^9.0.1",
     "yenv": "^3.0.1"

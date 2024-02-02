@@ -4,12 +4,20 @@ import { UserRepository } from "../domain/user.repository";
 import { UserGetAllDto } from "./dtos/user-get-all.dto";
 import { UserEntity } from "./entities/user.entity";
 import { UserModelDto } from "./dtos/user-models.dto";
+import { Result, err, ok } from "neverthrow";
+import { UserInsertException } from "./exceptions/user.exception";
 
 export class UserInfrastructure implements UserRepository{
-    async insert(user: User) {
-        const repository = DatabaseBootstrap.dataSource.getRepository(UserEntity)
-        const userEntity = UserModelDto.fromDomainToData(user);
-        await repository.save(userEntity)
+    async insert(user: User): Promise<Result<UserEntity, UserInsertException>> {
+        try {
+            const repository = DatabaseBootstrap.dataSource.getRepository(UserEntity)
+            const userEntity = UserModelDto.fromDomainToData(user);
+            const userInserted = await repository.save(userEntity)
+            return ok(userInserted)
+        } catch (error) {
+            return err(new UserInsertException(error.message))
+        }
+
     }
     
     getAll(): any{

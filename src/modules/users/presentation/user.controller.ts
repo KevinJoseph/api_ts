@@ -27,10 +27,19 @@ class UserController{
     }
 
     async insert(req: Request, res: Response){
-        console.log(req)
         const {name, lastname, email, password} = req.body;
         const userToInsert = UserFactory.create(name,lastname,email, password)
-        await userApplication.insert(userToInsert);
+        const userResult = await userApplication.insert(userToInsert);
+
+        if(userResult.isErr()){
+            return res.status(userResult.error.status).json({
+                name: userResult.error.name,
+                status: userResult.error.status,
+                message: userResult.error.message
+            })
+        }
+
+        res.status(201).json(userResult.value)
     }
 }
 
