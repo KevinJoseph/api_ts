@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { UserRepository } from "../domain/user.repository";
 import { UserInfrastructure, UserInsertResult } from "../infrastructure/user.infrastructure";
 import { UserApplication, UserInsertResultApplication } from "../application/user.application";
-import { UserFactory } from "../domain/user.factory";
+import { UserFactory, UserResult } from "../domain/user.factory";
 
 const userInfrastructure: UserRepository = new UserInfrastructure();
 const userApplication: UserApplication = new UserApplication(userInfrastructure);
@@ -28,18 +28,25 @@ class UserController{
 
     async insert(req: Request, res: Response){
         const {name, lastname, email, password} = req.body;
-        const userToInsert = UserFactory.create(name,lastname,email, password)
-        const userResult: UserInsertResultApplication = await userApplication.insert(userToInsert);
-
+        const userResult: UserResult = UserFactory.create(name,lastname,email, password)
+        
         if(userResult.isErr()){
-            return res.status(userResult.error.status).json({
+            return res.status(400).json({
                 name: userResult.error.name,
-                status: userResult.error.status,
                 message: userResult.error.message
             })
         }
+        
+        const userInsertResult: UserInsertResultApplication = await userApplication.insert(userResult.value);
 
-        res.status(201).json(userResult.value)
+        if(userInsertResult.isErr()){
+            return res.status(400).json({
+                name: userInsertResult.error.name,
+                message: userInsertResult.error.message
+            })
+        }
+
+        res.status(201).json(userInsertResult.value)
     }
 }
 
